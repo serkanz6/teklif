@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>manyamın cevabı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff69b4 0%, #9370db 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .question {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 20px 50px;
+            font-size: 24px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #f44336, #da190b);
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .message-bubble {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff4757, #8e44ad);
+            padding: 40px 60px;
+            border-radius: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            font-size: 28px;
+            color: white;
+            display: none;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .bubble-hearts {
+            position: absolute;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            font-size: 20px;
+        }
+
+        .bubble-hearts.top {
+            top: -15px;
+        }
+
+        .bubble-hearts.bottom {
+            bottom: -15px;
+        }
+
+        .heart-icon {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .hearts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #ff69b4;
+            transform: rotate(45deg);
+            animation: float 4s infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #ff69b4;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -20px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: -20px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .cups-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cups-container">
+            <div class="cup cup1"></div>
+            <div class="cup cup2"></div>
+            <div class="cup cup3"></div>
+        </div>
+        
+        <div class="question">Sana sevgilim diyebilirmiyim GÜZELİMMMM?</div>
+        
+        <div class="buttons">
+            <button class="btn btn-yes" id="yesBtn">Evet</button>
+            <button class="btn btn-no" id="noBtn">Hayır</button>
+        </div>
+    </div>
+
+    <div class="hearts-container" id="heartsContainer"></div>
+    <div class="message-bubble" id="messageBubble">
+        <div class="bubble-hearts top">
+           
+        </div>
+        <div class="message-content">
+            💕 Senden çooookkkk hoşlanıyorum SEVGİLİMMM 💕<br>
+            💝💝💝
+        </div>
+       
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const heartsContainer = document.getElementById('heartsContainer');
+        const messageBubble = document.getElementById('messageBubble');
+        const container = document.querySelector('.container');
+
+        // No button behavior - runs away from mouse
+        noBtn.addEventListener('mouseover', () => {
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.transition = 'all 0.3s ease';
+        });
+
+        // Yes button behavior
+        yesBtn.addEventListener('click', () => {
+            // Hide the question and buttons
+            container.style.display = 'none';
+            
+            // Create floating hearts
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDelay = Math.random() * 3 + 's';
+                    heartsContainer.appendChild(heart);
+                }, i * 150);
+            }
+
+            // Havai fişeği andıran renkli patlama
+            const fireworkColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#ffa500'];
+            const particleCount = 200;
+            const fireworkContainer = document.createElement('div');
+            fireworkContainer.style.position = 'fixed';
+            fireworkContainer.style.top = '0';
+            fireworkContainer.style.left = '0';
+            fireworkContainer.style.width = '100%';
+            fireworkContainer.style.height = '100%';
+            fireworkContainer.style.pointerEvents = 'none';
+            fireworkContainer.style.zIndex = '9999';
+            document.body.appendChild(fireworkContainer);
+
+            // Patlama noktası
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                const size = Math.random() * 6 + 2;
+                const color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+                const glow = Math.random() > 0.5 ? `0 0 ${size}px ${color}` : 'none';
+                
+                particle.style.position = 'absolute';
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.backgroundColor = color;
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.borderRadius = '50%';
+                particle.style.boxShadow = glow;
+                particle.style.opacity = '1';
+                fireworkContainer.appendChild(particle);
+
+                // Havai fişek animasyonu
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 300 + 100;
+                const duration = Math.random() * 2 + 1;
+                
+                particle.style.animation = `firework ${duration}s ease-out forwards`;
+                particle.style.setProperty('--endX', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--endY', Math.sin(angle) * distance + 'px');
+            }
+
+            // CSS animasyon tanımı ekle
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes firework {
+                    0% {
+                        transform: translate(0, 0);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(var(--endX), var(--endY));
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Show message bubble
+            setTimeout(() => {
+                messageBubble.style.display = 'block';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
